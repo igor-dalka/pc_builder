@@ -1,6 +1,6 @@
 from django.db import models
 
-class Motherboard(models.Model):
+class motherboard(models.Model):
     name = models.CharField(max_length=100)
     form_factor = models.CharField(max_length=50, null=True, blank=True)
     socket = models.CharField(max_length=50, null=True, blank=True)
@@ -26,7 +26,7 @@ class Motherboard(models.Model):
     def __str__(self):
         return self.name
 
-class Processor(models.Model):
+class processor(models.Model):
     name = models.CharField(max_length=100)
     socket = models.CharField(max_length=50, null=True, blank=True)
     cores = models.IntegerField(null=True, blank=True)
@@ -49,7 +49,7 @@ class Processor(models.Model):
     def __str__(self):
         return self.name
 
-class GraphicsCard(models.Model):
+class gpu(models.Model):
     name = models.CharField(max_length=100)
     VRAM = models.IntegerField(null=True, blank=True)
     PCIE_16x_slot_type = models.CharField(max_length=50, null=True, blank=True)
@@ -59,7 +59,7 @@ class GraphicsCard(models.Model):
     def __str__(self):
         return self.name
 
-class RAM(models.Model):
+class ram(models.Model):
     name = models.CharField(max_length=100)
     single_stick_capacity = models.IntegerField(null=True, blank=True)
     double_stick_capacity = models.IntegerField(null=True, blank=True)
@@ -69,7 +69,7 @@ class RAM(models.Model):
     def __str__(self):
         return self.name
 
-class PSU(models.Model):
+class psu(models.Model):
     name = models.CharField(max_length=100)
     power = models.IntegerField(null=True, blank=True)
     cert = models.CharField(max_length=100, null=True, blank=True)
@@ -78,7 +78,7 @@ class PSU(models.Model):
     def __str__(self):
         return self.name
 
-class Chassis(models.Model):
+class chassis(models.Model):
     name = models.CharField(max_length=100)
     form_factor = models.CharField(max_length=50, null=True, blank=True)
     type = models.CharField(max_length=50, null=True, blank=True)
@@ -101,7 +101,7 @@ class Chassis(models.Model):
     def __str__(self):
         return self.name
 
-class Fan(models.Model):
+class fan(models.Model):
     name = models.CharField(max_length=100)
     size = models.IntegerField(null=True, blank=True)
     rgb = models.BooleanField(null=True, blank=True)
@@ -111,7 +111,7 @@ class Fan(models.Model):
     def __str__(self):
         return self.name
 
-class Disc(models.Model):
+class disc(models.Model):
     name = models.CharField(max_length=100)
     disc_type = models.CharField(max_length=50, null=True, blank=True)
     volume = models.IntegerField(null=True, blank=True)
@@ -121,7 +121,7 @@ class Disc(models.Model):
     def __str__(self):
         return self.name
 
-class CPU_cooler(models.Model):
+class cpu_cooler(models.Model):
     name = models.CharField(max_length=100)
     tdp = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
@@ -132,7 +132,7 @@ class CPU_cooler(models.Model):
         return self.name
 
 
-class Thermal_Paste(models.Model):
+class thermal_paste(models.Model):
     name = models.CharField(max_length=100)
     conductivity = models.FloatField(null=True, blank=True)
 

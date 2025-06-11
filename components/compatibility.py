@@ -1,2 +1,2 @@
-def is_cpu_compatible_with_motherboard(cpu, motherboard):
-    return cpu.socket == motherboard.socket
+def is_mobo_comp_with_chassis(motherboard, chassis):
+    return motherboard.form_factor == chassis.form_factor
