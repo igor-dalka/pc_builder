@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 class motherboard(models.Model):
     name = models.CharField(max_length=100)
@@ -22,7 +23,6 @@ class motherboard(models.Model):
     WATERPUMP_slot = models.BooleanField(null=True, blank=True)
     VRM_quality = models.IntegerField(null=True, blank=True)
     details = models.TextField(blank=True, null=True)
-    fan_headers = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -86,8 +86,9 @@ class chassis(models.Model):
     glass_panel = models.BooleanField(null=True, blank=True)
     max_gpu_size = models.IntegerField(null=True, blank=True)
     max_cpu_cooler_size = models.IntegerField(null=True, blank=True)
-    slot_3_5_inch = models.IntegerField(null=True, blank=True)
+    max_AIO_size = models.IntegerField(null=True, blank=True)
     all_disc_slots = models.IntegerField(null=True, blank=True)
+    all_fan_slots = models.IntegerField(null=True, blank=True)
     fan_slot_1 = models.CharField(max_length=50, null=True, blank=True)
     fan_slot_2 = models.CharField(max_length=50, null=True, blank=True)
     fan_slot_3 = models.CharField(max_length=50, null=True, blank=True)
@@ -117,17 +118,21 @@ class disc(models.Model):
     disc_type = models.CharField(max_length=50, null=True, blank=True)
     volume = models.IntegerField(null=True, blank=True)
     slot_type = models.CharField(max_length=50, null=True, blank=True)
-    slot_size = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
 class cpu_cooler(models.Model):
     name = models.CharField(max_length=100)
+    type_of_cooler = models.CharField(max_length=50, null=True, blank=True)
     tdp = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
+    fan_headers_needed = models.IntegerField(null=True, blank=True)
+    chassis_fan_slots_needed = models.IntegerField(null=True, blank=True)
+    AIO_size = models.IntegerField(null=True, blank=True)
     can_add_fan = models.BooleanField(null=True, blank=True)
     decibels = models.FloatField(null=True, blank=True)
+    sockets = ArrayField(models.CharField(max_length=20), blank=True, null=True)
 
     def __str__(self):
         return self.name

@@ -18,7 +18,7 @@ def is_mobo_and_cpu_comp(motherboard, cpu):
 
     return motherboard.socket == cpu.socket
 
-def is_mobo_and_cpu_oc_comp(motherboard, cpu):
+def get_mobo_and_cpu_oc_comp(motherboard, cpu):
     
     if not motherboard or not cpu:
         return None
@@ -56,9 +56,9 @@ def get_ram_pair_info(motherboard):
         return None
 
     if motherboard.ram_slots >= 4:
-        return "You can buy 2 pairs of ram"
+        return "Możesz kupić dwie pary ramu"
     elif motherboard.ram_slots >= 2:
-        return "You can buy only 1 pair of ram"
+        return "Możesz kupić tylko jedną parę ramu"
     
 def is_ram_ddr_compatible_with_motherboard(ram, motherboard):
 
@@ -120,3 +120,105 @@ def get_m2_slot_status(motherboard):
     else:
         return "Ta płyta główna nie posiada slotów M.2"
     
+def get_sata_disk_limit_info(motherboard, chassis):
+
+    if not motherboard or not chassis:
+        return None
+    
+    sata_ports = motherboard.SATA_slots
+    disc_slots = chassis.all_disc_slots
+
+    if sata_ports < disc_slots:
+        return "Dostępne miejsca limituje liczba portów SATA na płycie głównej"
+    elif disc_slots < sata_ports:
+        return "Dostępne miejsca limituje liczba miejsc na dyski w obudowie"
+    else:
+        return "Obudowa i płyta mają taką samą maksymalną liczbę obsługiwanych dysków"
+    
+def get_max_fans_and_cpu_cooler_fans(motherboard, chassis, cpu_cooler):
+
+    if not motherboard or not chassis or not cpu_cooler:
+        return None
+    
+    fan_headers = motherboard.FAN_slots
+    chassis_fan_slots = chassis.all_fan_slots
+    cpu_cooler_fan_headers_needed = cpu_cooler.fan_headers_needed
+    cpu_cooler_chassis_fan_slots_needed = cpu_cooler.chassis_fan_slots_needed
+    max_fans = min((fan_headers - cpu_cooler_fan_headers_needed), (chassis_fan_slots - cpu_cooler_chassis_fan_slots_needed))
+
+    if max_fans < 0:
+        return "W zestawie brakuje miejsc do podłączenia wentylatorów w obudowie lub miejsc na wentylatory w obudowie!"
+    
+def is_AIO_possible(motherboard, cpu_cooler):
+
+    if not motherboard or not cpu_cooler:
+        return None
+    
+    mobo_waterpump_slot = motherboard.WATERPUMP_slot
+    type_of_cooler = cpu_cooler.type_of_cooler
+
+    if type_of_cooler == "AIO" and not mobo_waterpump_slot:
+        return "Płyta główna nie obsługuje chłodzenia wodnego (brak gniazda waterpump)"
+    elif type_of_cooler == "AIO":
+        return "Chłodzenie wodne jest wspierane przez płytę główną"
+
+def is_AIO_size_okay(cpu_cooler, chassis):
+    
+    if not chassis or not cpu_cooler:
+        return None
+    
+    max_AIO_size = chassis.max_AIO_size
+    AIO_size = cpu_cooler.AIO_size
+
+    if max_AIO_size == AIO_size:
+        return "Chłodzenie wodne idealnie pasuje do obudowy!"
+    
+    elif max_AIO_size > AIO_size:
+        return "Chłodzenie wodne pasuje do obudowy, ale weszłoby większe"
+    
+    elif max_AIO_size < AIO_size:
+        return "Chłodzenie nie wejdzie do obudowy!"
+    
+def is_ram_and_cpu_comp(processor, ram):
+    
+    if not processor or not ram:
+        return None
+    
+    ram_type = ram.ddr_type
+    processor_ram_type_ddr4 = processor.ddr4_compatible
+    processor_ram_type_ddr5 = processor.ddr5_compatible
+
+    if ram_type == 4 and processor_ram_type_ddr4:
+        return "Ram ddr4 pasuje do tego procesora"
+    elif ram_type == 5 and processor_ram_type_ddr5:
+        return "Ram ddr5 pasuje do tego procesora"
+    
+def get_chassis_and_cpu_cooler_size_comp(chassis, cpu_cooler):
+
+    if not chassis or not cpu_cooler:
+        return None
+
+    chassis_max_cpu_cooler_height = chassis.max_cpu_cooler_size
+    cpu_cooler_height = cpu_cooler.height
+    
+    clearance = chassis.max_cpu_cooler_size - cpu_cooler.height
+
+    if clearance < 0:
+        return "To chłodzenie nie wejdzie do tej obudowy"
+    elif clearance <= 5:
+        return "To chłodzenie wejdzie na styk"
+    else:
+        return "To chłodzenie będzie pasować do tej obudowy z zapasem"
+    
+def get_mobo_and_cpu_cooler_comp(motherboard, cpu_cooler):
+
+    if not motherboard or not cpu_cooler:
+        return None
+    
+    mobo_socket = motherboard.socket
+    cpu_cooler_sockets = cpu_cooler.sockets
+    
+    if mobo_socket in cpu_cooler_sockets:
+        return "Chłodzenie pasuje do procesora"
+    else:
+        return "Chłodzenie nie pasuje do procesora"
