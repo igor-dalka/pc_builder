@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 
 admin.site.register(motherboard)
-admin.site.register(processor)
+admin.site.register(cpu)
 admin.site.register(gpu)
 admin.site.register(ram)
 admin.site.register(psu)

@@ -179,18 +179,18 @@ def is_AIO_size_okay(cpu_cooler, chassis):
     elif max_AIO_size < AIO_size:
         return "Chłodzenie nie wejdzie do obudowy!"
     
-def is_ram_and_cpu_comp(processor, ram):
+def is_ram_and_cpu_comp(cpu, ram):
     
-    if not processor or not ram:
+    if not cpu or not ram:
         return None
     
     ram_type = ram.ddr_type
-    processor_ram_type_ddr4 = processor.ddr4_compatible
-    processor_ram_type_ddr5 = processor.ddr5_compatible
+    cpu_ram_type_ddr4 = cpu.ddr4_compatible
+    cpu_ram_type_ddr5 = cpu.ddr5_compatible
 
-    if ram_type == 4 and processor_ram_type_ddr4:
+    if ram_type == 4 and cpu_ram_type_ddr4:
         return "Ram ddr4 pasuje do tego procesora"
-    elif ram_type == 5 and processor_ram_type_ddr5:
+    elif ram_type == 5 and cpu_ram_type_ddr5:
         return "Ram ddr5 pasuje do tego procesora"
     
 def get_chassis_and_cpu_cooler_size_comp(chassis, cpu_cooler):

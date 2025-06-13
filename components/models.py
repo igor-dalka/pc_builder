@@ -27,7 +27,7 @@ class motherboard(models.Model):
     def __str__(self):
         return self.name
 
-class processor(models.Model):
+class cpu(models.Model):
     name = models.CharField(max_length=100)
     socket = models.CharField(max_length=50, null=True, blank=True)
     cores = models.IntegerField(null=True, blank=True)
