@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
 from .models import *
 from django.apps import apps
+from .compatibility import *
 
 class ComponentListView(APIView):
     def get(self, request, component_type):
@@ -164,3 +165,89 @@ class PCBuildDetailView(APIView):
         }
 
         return Response(data, status=status.HTTP_200_OK)
+    
+from .models import PCBuild
+
+class PCBuildSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PCBuild
+        fields = '__all__'
+
+
+class PCBuildCreateView(APIView):
+    def post(self, request):
+        serializer = PCBuildSerializer(data=request.data)
+        if serializer.is_valid():
+            build = serializer.save()
+            return Response({
+                "message": "Build zapisany!",
+                "build_id": build.id,
+                "url": f"/builds/{build.id}/"
+            }, status=201)
+        return Response(serializer.errors, status=400)
+    
+class CompatibilityCheckView(APIView):
+    def post(self, request):
+        data = request.data
+        response = {}
+
+        def get_component(model, key):
+            _id = data.get(key)
+            if _id:
+                try:
+                    return model.objects.get(id=_id)
+                except model.DoesNotExist:
+                    response[key] = {"error": f"{model.__name__} with ID {_id} not found"}
+            return None
+
+        selected_cpu = get_component(cpu, "cpu")
+        selected_mobo = get_component(motherboard, "motherboard")
+        selected_ram = get_component(ram, "ram")
+        selected_gpu = get_component(gpu, "gpu")
+        selected_chassis = get_component(chassis, "chassis")
+        selected_cooler = get_component(cpu_cooler, "cpu_cooler")
+
+        if selected_mobo and selected_chassis:
+            response["mobo_and_chassis"] = is_mobo_and_chassis_comp(selected_mobo, selected_chassis)
+
+        if selected_mobo and selected_cpu:
+            response["mobo_and_cpu"] = is_mobo_and_cpu_comp(selected_mobo, selected_cpu)
+            response["mobo_cpu_oc"] = get_mobo_and_cpu_oc_comp(selected_mobo, selected_cpu)
+            response["vrm_compatibility"] = get_vrm_compatibility_status(selected_mobo, selected_cpu)
+
+        if selected_mobo:
+            response["ram_pair_info"] = get_ram_pair_info(selected_mobo)
+
+        if selected_ram and selected_mobo:
+            response["ram_ddr_compatible"] = is_ram_ddr_compatible_with_motherboard(selected_ram, selected_mobo)
+            response["ram_speed_status"] = get_ram_speed_compatibility_status(selected_ram, selected_mobo)
+            response["ram_capacity_status"] = get_ram_capacity_status(selected_ram, selected_mobo)
+
+        if selected_gpu and selected_mobo:
+            response["gpu_pcie_compatibility"] = get_gpu_pcie_compatibility(selected_gpu, selected_mobo)
+
+        if selected_mobo:
+            response["m2_slot_status"] = get_m2_slot_status(selected_mobo)
+
+        if selected_mobo and selected_chassis:
+            response["sata_disk_limit_info"] = get_sata_disk_limit_info(selected_mobo, selected_chassis)
+
+        if selected_mobo and selected_chassis and selected_cooler:
+            response["fan_and_cooler_fan_status"] = get_max_fans_and_cpu_cooler_fans(selected_mobo, selected_chassis, selected_cooler)
+
+        if selected_mobo and selected_cooler:
+            response["aio_possible"] = is_AIO_possible(selected_mobo, selected_cooler)
+
+        if selected_cooler and selected_chassis:
+            response["aio_size_fit"] = is_AIO_size_okay(selected_cooler, selected_chassis)
+
+        if selected_ram and selected_cpu:
+            response["ram_and_cpu_compatibility"] = is_ram_and_cpu_comp(selected_cpu, selected_ram)
+
+        if selected_chassis and selected_cooler:
+            response["chassis_and_cooler_fit"] = get_chassis_and_cpu_cooler_size_comp(selected_chassis, selected_cooler)
+
+        if selected_mobo and selected_cooler:
+            response["cooler_and_mobo_socket"] = get_mobo_and_cpu_cooler_comp(selected_mobo, selected_cooler)
+
+        return Response(response, status=status.HTTP_200_OK)
