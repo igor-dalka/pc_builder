@@ -120,3 +120,47 @@ class ComponentListView(APIView):
             })
 
         return Response(data)
+    
+class ComponentDetailView(APIView):
+    def get(self, request, component_type, component_id):
+        try:
+            model = apps.get_model('components', component_type.lower())
+        except LookupError:
+            return Response({"error": "Invalid component type"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            item = model.objects.get(id=component_id)
+        except model.DoesNotExist:
+            return Response({"error": "Component not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = {
+            field.name: getattr(item, field.name)
+            for field in model._meta.fields
+        }
+
+        return Response(data)
+    
+class PCBuildDetailView(APIView):
+    def get(self, request, build_id):
+        try:
+            build = PCBuild.objects.get(id=build_id)
+        except PCBuild.DoesNotExist:
+            return Response({"error": "Build not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = {
+            "id": build.id,
+            "name": build.name,
+            "components": {
+                "cpu": build.cpu.name if build.cpu else None,
+                "motherboard": build.motherboard.name if build.motherboard else None,
+                "gpu": build.gpu.name if build.gpu else None,
+                "ram": build.ram.name if build.ram else None,
+                "psu": build.psu.name if build.psu else None,
+                "chassis": build.chassis.name if build.chassis else None,
+                "cpu_cooler": build.cpu_cooler.name if build.cpu_cooler else None,
+                "disc": build.disc.name if build.disc else None,
+                "thermal_paste": build.thermal_paste.name if build.thermal_paste else None,
+            }
+        }
+
+        return Response(data, status=status.HTTP_200_OK)

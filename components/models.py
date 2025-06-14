@@ -144,3 +144,20 @@ class thermal_paste(models.Model):
 
     def __str__(self):
         return self.name
+    
+class PCBuild(models.Model):
+
+    cpu = models.ForeignKey(cpu, on_delete=models.SET_NULL, null=True, blank=True)
+    motherboard = models.ForeignKey(motherboard, on_delete=models.SET_NULL, null=True, blank=True)
+    gpu = models.ForeignKey(gpu, on_delete=models.SET_NULL, null=True, blank=True)
+    ram = models.ForeignKey(ram, on_delete=models.SET_NULL, null=True, blank=True)
+    psu = models.ForeignKey(psu, on_delete=models.SET_NULL, null=True, blank=True)
+    chassis = models.ForeignKey(chassis, on_delete=models.SET_NULL, null=True, blank=True)
+    cpu_cooler = models.ForeignKey(cpu_cooler, on_delete=models.SET_NULL, null=True, blank=True)
+    disc = models.ForeignKey(disc, on_delete=models.SET_NULL, null=True, blank=True)
+    thermal_paste = models.ForeignKey(thermal_paste, on_delete=models.SET_NULL, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
