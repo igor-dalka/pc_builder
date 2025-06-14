@@ -4,6 +4,32 @@ from rest_framework import status, serializers
 from .models import *
 from django.apps import apps
 from .compatibility import *
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.views import View
+from django.shortcuts import render
+
+class PCBuildUIView(View):
+    def get(self, request):
+        return render(request, "build_ui.html", {
+            "cpus": cpu.objects.all(),
+            "mobos": motherboard.objects.all(),
+        })
+
+    def post(self, request):
+        cpu_id = request.POST.get("cpu")
+        mobo_id = request.POST.get("motherboard")
+
+        selected_cpu = cpu.objects.filter(id=cpu_id).first()
+        selected_mobo = motherboard.objects.filter(id=mobo_id).first()
+
+        alerts = []
+        if selected_cpu and selected_mobo:
+            if not is_mobo_and_cpu_comp(selected_mobo, selected_cpu):
+                alerts.append("nie działa)")
+
+        html_alert = render_to_string("_compatibility_alert.html", {"alerts": alerts})
+        return JsonResponse({"alert_html": html_alert})
 
 class ComponentListView(APIView):
     def get(self, request, component_type):

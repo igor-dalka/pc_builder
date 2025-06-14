@@ -1,0 +1,30 @@
+<head>
+    ...
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+</head>
+<form 
+  hx-post="{% url 'build-ui' %}" 
+  hx-trigger="change from:select" 
+  hx-target="#alert"
+  hx-swap="innerHTML"
+  class="space-y-4"
+>
+    {% csrf_token %}
+
+    <select name="cpu" class="block border p-2">
+        <option value="">Wybierz CPU</option>
+        {% for c in cpus %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="motherboard" class="block border p-2">
+        <option value="">Wybierz MOBO</option>
+        {% for m in mobos %}
+            <option value="{{ m.id }}">{{ m.name }}</option>
+        {% endfor %}
+    </select>
+
+</form>
+
+<div id="alert" class="mt-4"></div>

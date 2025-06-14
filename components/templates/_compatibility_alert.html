@@ -1,0 +1,10 @@
+{% if alerts %}
+<div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
+    <strong>Uwaga:</strong>
+    <ul class="list-disc pl-5">
+        {% for alert in alerts %}
+            <li>{{ alert }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
