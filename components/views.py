@@ -14,14 +14,41 @@ class PCBuildUIView(View):
         return render(request, "build_ui.html", {
             "cpus": cpu.objects.all(),
             "mobos": motherboard.objects.all(),
+            "rams": ram.objects.all(),
+            "gpus": gpu.objects.all(),
+            "psus": psu.objects.all(),
+            "chassis": chassis.objects.all(),
+            "cpu_coolers": cpu_cooler.objects.all(),
+            "discs": disc.objects.all(),
+            "thermal_pastes": thermal_paste.objects.all(),
         })
 
     def post(self, request):
+        def safe_get(model, id_value):
+            try:
+                return model.objects.get(id=int(id_value))
+            except (ValueError, model.DoesNotExist, TypeError):
+                return None
+
         cpu_id = request.POST.get("cpu")
         mobo_id = request.POST.get("motherboard")
+        ram_id = request.POST.get("ram")
+        gpu_id = request.POST.get("gpu")
+        psu_id = request.POST.get("psu")
+        chassis_id = request.POST.get("chassis")
+        cooler_id = request.POST.get("cpu_cooler")
+        disc_id = request.POST.get("disc")
+        thermal_id = request.POST.get("thermal_paste")
 
-        selected_cpu = cpu.objects.filter(id=cpu_id).first()
-        selected_mobo = motherboard.objects.filter(id=mobo_id).first()
+        selected_cpu = safe_get(cpu, cpu_id)
+        selected_mobo = safe_get(motherboard, mobo_id)
+        selected_ram = safe_get(ram, ram_id)
+        selected_gpu = safe_get(gpu, gpu_id)
+        selected_psu = safe_get(psu, psu_id)
+        selected_chassis = safe_get(chassis, chassis_id)
+        selected_cooler = safe_get(cpu_cooler, cooler_id)
+        selected_disc = safe_get(disc, disc_id)
+        selected_thermal = safe_get(thermal_paste, thermal_id)
 
         alerts = []
         if selected_cpu and selected_mobo:

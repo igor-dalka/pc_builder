@@ -1,7 +1,8 @@
 <head>
-    ...
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <form 
   hx-post="{% url 'build-ui' %}" 
   hx-trigger="change from:select" 
@@ -11,20 +12,79 @@
 >
     {% csrf_token %}
 
-    <select name="cpu" class="block border p-2">
+    <!-- CPU -->
+    <select name="cpu" class="block border p-2 w-full">
         <option value="">Wybierz CPU</option>
         {% for c in cpus %}
             <option value="{{ c.id }}">{{ c.name }}</option>
         {% endfor %}
     </select>
 
-    <select name="motherboard" class="block border p-2">
+    <!-- MOBO -->
+    <select name="motherboard" class="block border p-2 w-full">
         <option value="">Wybierz MOBO</option>
         {% for m in mobos %}
             <option value="{{ m.id }}">{{ m.name }}</option>
         {% endfor %}
     </select>
 
+    <!-- RAM -->
+    <select name="ram" class="block border p-2 w-full">
+        <option value="">Wybierz RAM</option>
+        {% for r in rams %}
+            <option value="{{ r.id }}">{{ r.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- GPU -->
+    <select name="gpu" class="block border p-2 w-full">
+        <option value="">Wybierz GPU</option>
+        {% for g in gpus %}
+            <option value="{{ g.id }}">{{ g.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- PSU -->
+    <select name="psu" class="block border p-2 w-full">
+        <option value="">Wybierz PSU</option>
+        {% for p in psus %}
+            <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Chassis -->
+    <select name="chassis" class="block border p-2 w-full">
+        <option value="">Wybierz Obudowę</option>
+        {% for ch in chassis %}
+            <option value="{{ ch.id }}">{{ ch.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- CPU Cooler -->
+    <select name="cpu_cooler" class="block border p-2 w-full">
+        <option value="">Wybierz Chłodzenie CPU</option>
+        {% for cc in cpu_coolers %}
+            <option value="{{ cc.id }}">{{ cc.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Dysk -->
+    <select name="disc" class="block border p-2 w-full">
+        <option value="">Wybierz Dysk</option>
+        {% for d in discs %}
+            <option value="{{ d.id }}">{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Pasta termiczna -->
+    <select name="thermal_paste" class="block border p-2 w-full">
+        <option value="">Wybierz Pastę Termoprzewodzącą</option>
+        {% for tp in thermal_pastes %}
+            <option value="{{ tp.id }}">{{ tp.name }}</option>
+        {% endfor %}
+    </select>
+
 </form>
 
-<div id="alert" class="mt-4"></div>
+<!-- ALERT ZGODNOŚCI -->
+<div id="alert" class="mt-4 text-sm text-red-600"></div>
