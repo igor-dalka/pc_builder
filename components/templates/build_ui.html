@@ -20,6 +20,10 @@
         {% endfor %}
     </select>
 
+    <div id="alert" hx-target="this" hx-swap="outerHTML">
+    {% include "_compatibility_alert.html" with alerts=alerts %}
+    </div>
+
     <!-- MOBO -->
     <select name="motherboard" class="block border p-2 w-full">
         <option value="">Wybierz MOBO</option>

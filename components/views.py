@@ -53,10 +53,9 @@ class PCBuildUIView(View):
         alerts = []
         if selected_cpu and selected_mobo:
             if not is_mobo_and_cpu_comp(selected_mobo, selected_cpu):
-                alerts.append("nie działa)")
+                alerts.append("nie działa")
 
-        html_alert = render_to_string("_compatibility_alert.html", {"alerts": alerts})
-        return JsonResponse({"alert_html": html_alert})
+        return render(request, "_compatibility_alert.html", {"alerts": alerts})
 
 class ComponentListView(APIView):
     def get(self, request, component_type):
