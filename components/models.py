@@ -13,22 +13,25 @@ class motherboard(models.Model):
     ram_max_capacity = models.IntegerField(null=True, blank=True)
     audio_chipset = models.CharField(max_length=50, null=True, blank=True)
     ethernet_max_speed = models.IntegerField(null=True, blank=True)
-    PCIE_16x_slots = models.IntegerField(null=True, blank=True)
-    PCIE_16x_slot_type = models.FloatField(null=True, blank=True)
-    PCIE_8x_slots = models.IntegerField(null=True, blank=True)
-    PCIE_1x_slots = models.IntegerField(null=True, blank=True)
-    M2_slots = models.IntegerField(null=True, blank=True)
-    SATA_slots = models.IntegerField(null=True, blank=True)
-    FAN_slots = models.IntegerField(null=True, blank=True)
-    WATERPUMP_slot = models.BooleanField(null=True, blank=True)
-    VRM_quality = models.IntegerField(null=True, blank=True)
+    pcie_16x_slots = models.IntegerField(null=True, blank=True)
+    pcie_16x_slot_type = models.FloatField(null=True, blank=True)
+    pcie_8x_slots = models.IntegerField(null=True, blank=True)
+    pcie_1x_slots = models.IntegerField(null=True, blank=True)
+    m2_slots = models.IntegerField(null=True, blank=True)
+    sata_slots = models.IntegerField(null=True, blank=True)
+    fan_slots = models.IntegerField(null=True, blank=True)
+    waterpump_slot = models.BooleanField(null=True, blank=True)
+    vrm_quality = models.IntegerField(null=True, blank=True)
     details = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 class cpu(models.Model):
-    name = models.CharField(max_length=100)
+    company = models.CharField(max_length=100, null=True, blank=True)
+    serie = models.CharField(max_length=100, null=True, blank=True)
+    model = models.CharField(max_length=100, null=True, blank=True)
+    full_name = models.CharField(max_length=100)
     socket = models.CharField(max_length=50, null=True, blank=True)
     cores = models.IntegerField(null=True, blank=True)
     performance_cores = models.IntegerField(null=True, blank=True)
@@ -42,27 +45,31 @@ class cpu(models.Model):
     igpu = models.BooleanField(null=True, blank=True)
     oc_possible = models.BooleanField(null=True, blank=True)
     average_max_oc = models.FloatField(null=True, blank=True)
-    L3cache = models.IntegerField(null=True, blank=True)
+    l3cache = models.IntegerField(null=True, blank=True)
     ddr4_compatible = models.IntegerField(null=True, blank=True)
     ddr5_compatible = models.IntegerField(null=True, blank=True)
     max_ddr4_speed = models.IntegerField(null=True, blank=True)
     max_ddr5_speed = models.IntegerField(null=True, blank=True)
     score = models.IntegerField(null=True, blank=True)
     oc_score = models.IntegerField(null=True, blank=True)
-    minimum_VRM_quality = models.IntegerField(null=True, blank=True)
+    minimum_vrm_quality = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.full_name
 
 class gpu(models.Model):
-    name = models.CharField(max_length=100)
-    VRAM = models.IntegerField(null=True, blank=True)
-    PCIE_16x_slot_type = models.CharField(max_length=50, null=True, blank=True)
+    company = models.CharField(max_length=100, null=True, blank=True)
+    serie = models.CharField(max_length=100, null=True, blank=True)
+    model = models.CharField(max_length=100, null=True, blank=True)
+    full_name = models.CharField(max_length=100)
+    vram = models.IntegerField(null=True, blank=True)
+    pcie_16x_slot_type = models.CharField(max_length=50, null=True, blank=True)
     tdp = models.IntegerField(null=True, blank=True)
+    tdp_oc = models.IntegerField(null=True, blank=True)
     score = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
-        return self.name
+        return self.full_name
 
 class ram(models.Model):
     name = models.CharField(max_length=100)
@@ -90,7 +97,7 @@ class chassis(models.Model):
     glass_panel = models.BooleanField(null=True, blank=True)
     max_gpu_size = models.IntegerField(null=True, blank=True)
     max_cpu_cooler_size = models.IntegerField(null=True, blank=True)
-    max_AIO_size = models.IntegerField(null=True, blank=True)
+    max_aio_size = models.IntegerField(null=True, blank=True)
     all_disc_slots = models.IntegerField(null=True, blank=True)
     all_fan_slots = models.IntegerField(null=True, blank=True)
     fan_slot_1 = models.CharField(max_length=50, null=True, blank=True)
@@ -102,7 +109,7 @@ class chassis(models.Model):
     fan_slot_7 = models.CharField(max_length=50, null=True, blank=True)
     rgb_hub = models.BooleanField(null=True, blank=True)
     fan_hub = models.BooleanField(null=True, blank=True)
-    PSU_placement = models.CharField(max_length=50, null=True, blank=True)
+    psu_placement = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -111,7 +118,7 @@ class fan(models.Model):
     name = models.CharField(max_length=100)
     size = models.IntegerField(null=True, blank=True)
     rgb = models.BooleanField(null=True, blank=True)
-    CFM = models.FloatField(null=True, blank=True)
+    cfm = models.FloatField(null=True, blank=True)
     decibels = models.FloatField(null=True, blank=True)
 
     def __str__(self):
@@ -133,7 +140,7 @@ class cpu_cooler(models.Model):
     height = models.IntegerField(null=True, blank=True)
     fan_headers_needed = models.IntegerField(null=True, blank=True)
     chassis_fan_slots_needed = models.IntegerField(null=True, blank=True)
-    AIO_size = models.IntegerField(null=True, blank=True)
+    aio_size = models.IntegerField(null=True, blank=True)
     can_add_fan = models.BooleanField(null=True, blank=True)
     decibels = models.FloatField(null=True, blank=True)
     sockets = ArrayField(models.CharField(max_length=20), blank=True, null=True)
