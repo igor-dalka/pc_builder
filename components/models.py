@@ -62,7 +62,7 @@ class gpu(models.Model):
     serie = models.CharField(max_length=100, null=True, blank=True)
     model = models.CharField(max_length=100, null=True, blank=True)
     full_name = models.CharField(max_length=100)
-    vram = models.IntegerField(null=True, blank=True)
+    vram = models.FloatField(null=True, blank=True)
     pcie_16x_slot_type = models.CharField(max_length=50, null=True, blank=True)
     tdp = models.IntegerField(null=True, blank=True)
     tdp_oc = models.IntegerField(null=True, blank=True)

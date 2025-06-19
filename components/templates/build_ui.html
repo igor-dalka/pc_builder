@@ -16,7 +16,7 @@
     <select name="cpu" class="block border p-2 w-full">
         <option value="">Wybierz CPU</option>
         {% for c in cpus %}
-            <option value="{{ c.id }}">{{ c.name }}</option>
+            <option value="{{ c.id }}">{{ c.full_name }}</option>
         {% endfor %}
     </select>
 
@@ -44,7 +44,7 @@
     <select name="gpu" class="block border p-2 w-full">
         <option value="">Wybierz GPU</option>
         {% for g in gpus %}
-            <option value="{{ g.id }}">{{ g.name }}</option>
+            <option value="{{ g.id }}">{{ g.full_name }}</option>
         {% endfor %}
     </select>
 
