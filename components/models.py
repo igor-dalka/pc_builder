@@ -2,10 +2,12 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 class motherboard(models.Model):
+    company = models.CharField(max_length=100, null=True, blank=True)
+    chipset = models.CharField(max_length=50, null=True, blank=True)
+    model = models.CharField(max_length=100, null=True, blank=True)
     name = models.CharField(max_length=100)
     form_factor = models.CharField(max_length=50, null=True, blank=True)
     socket = models.CharField(max_length=50, null=True, blank=True)
-    chipset = models.CharField(max_length=50, null=True, blank=True)
     oc_possible = models.BooleanField(null=True, blank=True) 
     ram_slots = models.IntegerField(null=True, blank=True)
     ram_ddr = models.IntegerField(null=True, blank=True)
